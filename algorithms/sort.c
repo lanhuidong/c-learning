@@ -21,3 +21,20 @@ void selectionsort(int a[], int length)
 	a[min] = tmp;
     }
 }
+
+/*
+ * 插入排序：
+ * 在一个有序的小序列中插入一个元素，比较从小序列末尾开始，
+ * 如果最后一个元素大于要插入的元素，则交换位置，继续和前面元素比较，直到找到小于等于它的元素
+ */
+void insertionsort(int a[], int length)
+{
+    int i, j, tmp;
+    for (i  = 0; i < length; i++)
+        for (j = i; j > 0 && a[j] < a[j - 1]; j--)
+	{
+	    tmp = a[j];
+	    a[j] = a[j - 1];
+	    a[j - 1] = tmp;
+	}
+}
