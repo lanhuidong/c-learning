@@ -38,3 +38,28 @@ void insertionsort(int a[], int length)
 	    a[j - 1] = tmp;
 	}
 }
+
+/*
+ * 希尔排序：
+ * 插入排序的扩展版
+ */
+void shellsort(int a[], int length)
+{
+    int h, i, j, tmp;
+    h = 1;
+    while (h < length / 3)
+        h = 3 * h +1;
+    while (h >= 1)
+    {
+        for (i = h; i < length; i++)
+	{
+	    for (j = i; j >= h && a[j] < a[j - h]; j -= h)
+	    {
+	        tmp = a[j];
+		a[j] = a[j - h];
+		a[j - h] = tmp;
+	    }
+	}
+	h = h / 3;
+    }
+}

@@ -13,7 +13,7 @@ int main(int argc, char *argv)
         printf("%d ", a[i]);
     printf("\n");
 
-    insertionsort(a, length);
+    shellsort(a, length);
 
     printf("after sort:\n");
     for (i = 0; i < length; i++)
