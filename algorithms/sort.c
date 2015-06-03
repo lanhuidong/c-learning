@@ -99,3 +99,21 @@ void mergesort(int a[], int length)
 	    merge(a, aux, lo, lo + sz - 1, min);
 	}
 }
+
+void recursive_sort(int a[], int aux[], int lo, int hi)
+{
+    int mid;
+    if (hi <= lo)
+        return;
+    mid = lo + (hi - lo) / 2;
+    recursive_sort(a, aux, lo, mid);
+    recursive_sort(a, aux, mid + 1, hi);
+    merge(a, aux, lo, mid, hi);
+}
+
+void mergesort_r(int a[], int length)
+{
+    int aux[length];
+    recursive_sort(a, aux, 0, length - 1);
+}
+

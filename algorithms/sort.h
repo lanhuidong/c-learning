@@ -11,5 +11,6 @@ void shellsort(int a[], int length);
 
 /*归并排序*/
 void mergesort(int a[], int length);
+void mergesort_r(int a[], int length);
 
 #endif
