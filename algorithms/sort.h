@@ -9,4 +9,7 @@ void insertionsort(int a[], int length);
 /*希尔排序*/
 void shellsort(int a[], int length);
 
+/*归并排序*/
+void mergesort(int a[], int length);
+
 #endif

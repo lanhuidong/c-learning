@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "sort.h" 
 
 /*
@@ -62,4 +63,39 @@ void shellsort(int a[], int length)
 	}
 	h = h / 3;
     }
+}
+
+/*
+ * 归并排序
+ */
+void merge(int a[], int aux[], int lo, int mid, int hi)
+{
+    int i = lo, j = mid + 1, k;
+    for (k = lo; k <= hi; k++)
+        aux[k] = a[k];
+    for (k = lo; k <= hi; k++)
+    {
+        if (i > mid)
+	    a[k] = aux[j++];
+	else if (j > hi)
+	    a[k] = aux[i++];
+	else if (aux[j] < aux[i])
+	    a[k] = aux[j++];
+	else
+	    a[k] = aux[i++];
+    }
+}
+
+void mergesort(int a[], int length)
+{
+    int sz, lo, min;
+    int aux[length];
+    for (sz = 1; sz < length; sz = sz + sz)
+        for (lo = 0; lo < length - sz; lo += sz + sz)
+	{
+	    int min = length - 1;
+	    if (min > lo + sz + sz - 1)
+	        min = lo + sz + sz - 1;
+	    merge(a, aux, lo, lo + sz - 1, min);
+	}
 }
