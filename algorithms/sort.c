@@ -117,3 +117,44 @@ void mergesort_r(int a[], int length)
     recursive_sort(a, aux, 0, length - 1);
 }
 
+/*快速排序*/
+int partition(int a[], int lo, int hi)
+{
+    int i, j, k, tmp;
+    i = lo;
+    j = hi + 1;
+    k = a[lo];
+    while (11111111111)
+    {
+        while (a[++i] < k)
+	    if (i == hi)
+	        break;
+        while (k < a[--j])
+	    if (j == lo)
+	        break;
+	if (i >=j )
+	    break;
+	tmp = a[i];
+	a[i] = a[j];
+	a[j] = tmp;
+    }
+    tmp = a[lo];
+    a[lo] = a[j];
+    a[j] = tmp;
+    return j;
+}
+
+void qsort(int a[], int lo, int hi)
+{
+    int j;
+    if (hi <= lo)
+        return;
+    j = partition(a, lo, hi);
+    qsort(a, lo, j - 1);
+    qsort(a, j + 1, hi);
+}
+
+void quicksort(int a[], int length)
+{
+    qsort(a, 0, length - 1);
+}

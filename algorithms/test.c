@@ -13,7 +13,7 @@ int main(int argc, char *argv)
         printf("%d ", a[i]);
     printf("\n");
 
-    mergesort_r(a, length);
+    quicksort(a, length);
 
     printf("after sort:\n");
     for (i = 0; i < length; i++)

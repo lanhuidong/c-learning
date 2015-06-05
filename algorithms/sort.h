@@ -13,4 +13,7 @@ void shellsort(int a[], int length);
 void mergesort(int a[], int length);
 void mergesort_r(int a[], int length);
 
+/*快速排序*/
+void quicksort(int a[], int length);
+
 #endif
