@@ -1,5 +1,6 @@
 /*
  * gcc -std=c99 demo1.c
+ * 必须满足等式：(a/b)*b+a%b=a
  */
 #include<stdio.h>
 int main(void)
