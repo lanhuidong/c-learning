@@ -14,7 +14,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
     int count1 = 0, count2 = 0;
     high1 = nums1 + nums1Size - 1;
     high2 = nums2 + nums2Size - 1;
-    while((nums1Size - count1 > 0)&&(nums2Size - count2 > 0)){
+    while((nums1Size > count1)&&(nums2Size > count2)){
         if(*nums1 > *nums2){
             count2++;
             if(nums2 != high2){
@@ -26,7 +26,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
                 nums1++;
             }
         }
-        if((nums1Size - count1 > 0)&&(nums2Size - count2 > 0)){
+        if((nums1Size > count1)&&(nums2Size > count2)){
             if(*high1 > *high2){
                 count1++;
                 if(high1 != nums1){
@@ -38,12 +38,12 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
                    high2--;
                 }
             }
-        } else if(nums1Size - count1 > 0){
+        } else if(nums1Size > count1){
             count1++;
             if(high1 != nums1){
                 high1--;
             }
-        } else if(nums2Size - count2 > 0){
+        } else if(nums2Size > count2){
             count2++;
             if(high2 != nums2){
                 high2--;
@@ -52,7 +52,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
     }
     if(nums1Size - count1 == 1){
         return *nums1;
-    } else if(nums1Size - count1 > 0 &&(nums1Size - count1)%2 == 0){
+    } else if(nums1Size - count1 > 0 &&((nums1Size - count1)&1) == 0){
         return (*(nums1 + (nums1Size - count1) /2 - 1)+*(nums1+(nums1Size - count1)/2)) / 2.0;
     } else if(nums1Size - count1 > 0){
         return *(nums1 + (nums1Size - count1) / 2);
@@ -60,7 +60,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
 
     if(nums2Size - count2 == 1){
         return *nums2;
-    } else if(nums2Size - count2 > 0 &&(nums2Size - count2)%2 == 0){
+    } else if(nums2Size - count2 > 0 &&((nums2Size - count2)&1) == 0){
         return (*(nums2 + (nums2Size-count2) /2-1)+*(nums2+(nums2Size-count2)/2)) / 2.0;
     } else if(nums2Size - count2 > 0){
         return *(nums2 + (nums2Size - count2) / 2);
