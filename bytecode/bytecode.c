@@ -10,6 +10,7 @@
                            (((uint32_t)(A) & 0x000000ff) << 24))
 
 int isBigEndian();
+void parse_CONSTANT_Methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 
 void parse(FILE *fp,struct ClassFile *cfp)
 {
@@ -26,6 +27,59 @@ void parse(FILE *fp,struct ClassFile *cfp)
     version[1] = isBigEndian() ? version[1] : BigLittleSwap16(version[1]);
     cfp->minor_version = version[0];
     cfp->major_version = version[1];
+    uint16_t constant_pool_count;
+    fread(&constant_pool_count, sizeof(uint16_t), 1, fp);
+    constant_pool_count = isBigEndian() ? constant_pool_count : BigLittleSwap16(constant_pool_count);
+    cfp->constant_pool_count = constant_pool_count;
+
+    uint8_t tag;
+    for(uint16_t i = 0; i < constant_pool_count; i++) {
+        fread(&tag, sizeof(uint8_t), 1, fp);
+	switch(tag){
+	    case 1:
+	    break;
+	    case 3:
+	    break;
+	    case 4:
+	    break;
+	    case 5:
+	    break;
+	    case 6:
+	    break;
+	    case 7:
+	    break;
+	    case 8:
+	    break;
+	    case 9:
+	    break;
+	    case 10:
+	    parse_CONSTANT_Methodref_info(i, tag, fp, cfp);
+	    break;
+	    case 11:
+	    break;
+	    case 12:
+	    break;
+	    case 15:
+	    break;
+	    case 16:
+	    break;
+	    case 18:
+	    break;
+            default:printf("unkonw tag %u\n", tag);
+        }
+        break;
+    }
+}
+
+void parse_CONSTANT_Methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint16_t class_index, name_and_type_index;
+    fread(&class_index, sizeof(uint16_t), 1, fp);
+    class_index = isBigEndian() ? class_index : BigLittleSwap16(class_index);
+    fread(&name_and_type_index, sizeof(uint16_t), 1, fp);
+    name_and_type_index = isBigEndian() ? name_and_type_index : BigLittleSwap16(name_and_type_index);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.methodref_info.class_index = class_index;
+    cfp->constant_pool[index].info.methodref_info.name_and_type_index = name_and_type_index;
 }
 
 /**
