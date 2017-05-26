@@ -1,7 +1,9 @@
 #include<stdio.h>
-#include<stdlib.h>
 #include<stdint.h>
+#include "bytecode.h"
 
+#define BigLittleSwap16(A) ((((uint16_t)(A) & 0xff00) >> 8) | \
+                           (((uint16_t)(A) & 0x00ff) << 8))
 #define BigLittleSwap32(A) ((((uint32_t)(A) & 0xff000000) >> 24) | \
                            (((uint32_t)(A) & 0x00ff0000) >> 8) | \
                            (((uint32_t)(A) & 0x0000ff00) << 8) | \
@@ -9,26 +11,21 @@
 
 int isBigEndian();
 
-int main(int argc, char *argv[])
+void parse(FILE *fp,struct ClassFile *cfp)
 {
-    if(argc < 2){
-        printf("请输入文件名。\n");
-	exit(0);
-    }
-    FILE *fp = fopen(argv[1], "r");
-    if(fp == NULL){
-        perror("open bytecode file error.");
-	exit(1);
-    }
     uint32_t magic;
     fread(&magic, sizeof(uint32_t), 1, fp);
     //magic = isBigEndian() ? magic : BigLittleSwap32(magic);
     if(!isBigEndian()){
         magic = BigLittleSwap32(magic);
     }
-    printf("magic: %X\n", magic);
-    fclose(fp);
-    return 0;
+    cfp->magic = magic;
+    uint16_t version[2];
+    fread(version, sizeof(uint16_t), 2, fp);
+    version[0] = isBigEndian() ? version[0] : BigLittleSwap16(version[0]);
+    version[1] = isBigEndian() ? version[1] : BigLittleSwap16(version[1]);
+    cfp->minor_version = version[0];
+    cfp->major_version = version[1];
 }
 
 /**
