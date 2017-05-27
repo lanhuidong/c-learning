@@ -94,7 +94,7 @@ struct ClassFile {
     uint16_t minor_version;
     uint16_t major_version;
     uint16_t constant_pool_count;
-    struct Cp_info constant_pool[];
+    struct Cp_info *constant_pool;
 };
 
 void parse(FILE *fp, struct ClassFile *cfp);

@@ -17,9 +17,10 @@ int main(int argc, char *argv[])
     }
     struct ClassFile *cfp = (struct ClassFile *)malloc(sizeof(struct ClassFile));
     parse(fp, cfp);
-    printf("magic:%X\n", cfp->magic);
-    printf("version: %u.%u, JDK1.%u\n", cfp->major_version, cfp->minor_version, cfp->major_version-44);
+    printf("魔数:%X\n", cfp->magic);
+    printf("字节码文件版本号: %u.%u, JDK1.%u\n", cfp->major_version, cfp->minor_version, cfp->major_version-44);
     print_constants(cfp);
+    free(cfp->constant_pool);
     free(cfp);
     fclose(fp);
     return 0;
