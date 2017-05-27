@@ -9,7 +9,7 @@ void print_constants(struct ClassFile *cfp){
         uint8_t tag = cfp->constant_pool[i].tag;
 	switch(tag){
 	    case 10:
-                printf("#%d=Methodref,#%u.#%u\n", i+1, cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
+                printf("#%-5d = Methodref\t\t#%u.#%u\n", i+1, cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
 	        break;
 	    default:
 	    printf("unkonw tag:%u\n", tag);

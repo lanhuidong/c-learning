@@ -10,7 +10,7 @@
                            (((uint32_t)(A) & 0x000000ff) << 24))
 
 int isBigEndian();
-void parse_CONSTANT_Methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 
 void parse(FILE *fp,struct ClassFile *cfp)
 {
@@ -53,7 +53,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
 	    case 9:
 	    break;
 	    case 10:
-	    parse_CONSTANT_Methodref_info(i, tag, fp, cfp);
+	    parse_methodref_info(i, tag, fp, cfp);
 	    break;
 	    case 11:
 	    break;
@@ -71,7 +71,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
     }
 }
 
-void parse_CONSTANT_Methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
     uint16_t class_index, name_and_type_index;
     fread(&class_index, sizeof(uint16_t), 1, fp);
     class_index = isBigEndian() ? class_index : BigLittleSwap16(class_index);
