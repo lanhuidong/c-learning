@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<stdint.h>
 #include "bytecode.h"
+#include "constant_pool_out.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,12 +19,7 @@ int main(int argc, char *argv[])
     parse(fp, cfp);
     printf("magic:%X\n", cfp->magic);
     printf("version: %u.%u, JDK1.%u\n", cfp->major_version, cfp->minor_version, cfp->major_version-44);
-    uint16_t constant_pool_count = cfp->constant_pool_count;
-    printf("constant_pool_count:%u\n", constant_pool_count);
-    for(uint16_t i = 0; i < constant_pool_count; i++){
-        printf("#%d=%u,%u,%u\n", i+1, cfp->constant_pool[i].tag,cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
-        break;
-    }
+    print_constants(cfp);
     free(cfp);
     fclose(fp);
     return 0;
