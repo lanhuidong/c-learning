@@ -15,6 +15,8 @@ void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFil
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_string_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_utf8_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_nameandtype_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 
 void parse(FILE *fp,struct ClassFile *cfp)
 {
@@ -41,10 +43,11 @@ void parse(FILE *fp,struct ClassFile *cfp)
     cfp->constant_pool =(struct Cp_info *)malloc(constant_pool_count * sizeof(struct Cp_info));
 
     uint8_t tag;
-    for(uint16_t i = 0; i < constant_pool_count; i++) {
+    for(uint16_t i = 0; i < constant_pool_count - 1; i++) {
         fread(&tag, sizeof(uint8_t), 1, fp);
 	switch(tag){
 	    case 1:
+                parse_utf8_info(i, tag, fp, cfp);
 	        break;
 	    case 3:
 	        break;
@@ -69,6 +72,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
 	    case 11:
 	        break;
 	    case 12:
+	        parse_nameandtype_info(i, tag, fp, cfp);
 	        break;
 	    case 15:
 	        break;
@@ -77,9 +81,6 @@ void parse(FILE *fp,struct ClassFile *cfp)
 	    case 18:
 	        break;
             default:printf("unkonw tag %u\n", tag);
-        }
-        if(i==5){
-            break;
         }
     }
 }
@@ -120,6 +121,27 @@ void parse_string_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *
     string_index = isBigEndian() ? string_index : BigLittleSwap16(string_index);
     cfp->constant_pool[index].tag = tag;
     cfp->constant_pool[index].info.string_info.string_index = string_index;
+}
+
+void parse_utf8_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint16_t length;
+    fread(&length, sizeof(uint16_t), 1, fp);
+    length = isBigEndian() ? length : BigLittleSwap16(length);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.utf8_info.length = length;
+    cfp->constant_pool[index].info.utf8_info.bytes = (uint8_t *)malloc(length * sizeof(uint8_t));
+    fread(cfp->constant_pool[index].info.utf8_info.bytes, sizeof(uint8_t), length, fp);
+}
+
+void parse_nameandtype_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint16_t name_index, descriptor_index;
+    fread(&name_index, sizeof(uint16_t), 1, fp);
+    name_index = isBigEndian() ? name_index : BigLittleSwap16(name_index);
+    fread(&descriptor_index, sizeof(uint16_t), 1, fp);
+    descriptor_index = isBigEndian() ? descriptor_index : BigLittleSwap16(descriptor_index);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.nameAndType_info.name_index = name_index;
+    cfp->constant_pool[index].info.nameAndType_info.descriptor_index = descriptor_index;
 }
 
 /**

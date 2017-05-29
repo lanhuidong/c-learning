@@ -50,7 +50,7 @@ struct NameAndType_info {
 
 struct Utf8_info {
     uint16_t length;
-    uint8_t bytes[];
+    uint8_t *bytes;
 };
 
 struct MethodHandle_info {
