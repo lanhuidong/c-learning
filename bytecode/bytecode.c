@@ -13,6 +13,7 @@
 int isBigEndian();
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 
 void parse(FILE *fp,struct ClassFile *cfp)
 {
@@ -43,38 +44,39 @@ void parse(FILE *fp,struct ClassFile *cfp)
         fread(&tag, sizeof(uint8_t), 1, fp);
 	switch(tag){
 	    case 1:
-	    break;
+	        break;
 	    case 3:
-	    break;
+	        break;
 	    case 4:
-	    break;
+	        break;
 	    case 5:
-	    break;
+	        break;
 	    case 6:
-	    break;
+	        break;
 	    case 7:
-	    break;
+                parse_fieldref_info(i, tag, fp, cfp);
+	        break;
 	    case 8:
-	    break;
+	        break;
 	    case 9:
-            parse_fieldref_info(i, tag, fp, cfp);
-	    break;
+                parse_fieldref_info(i, tag, fp, cfp);
+	        break;
 	    case 10:
-	    parse_methodref_info(i, tag, fp, cfp);
-	    break;
+	        parse_methodref_info(i, tag, fp, cfp);
+	        break;
 	    case 11:
-	    break;
+	        break;
 	    case 12:
-	    break;
+	        break;
 	    case 15:
-	    break;
+	        break;
 	    case 16:
-	    break;
+	        break;
 	    case 18:
-	    break;
+	        break;
             default:printf("unkonw tag %u\n", tag);
         }
-        if(i==1){
+        if(i==2){
             break;
         }
     }
@@ -100,7 +102,14 @@ void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile
     cfp->constant_pool[index].tag = tag;
     cfp->constant_pool[index].info.fieldref_info.class_index = class_index;
     cfp->constant_pool[index].info.fieldref_info.name_and_type_index = name_and_type_index;
-    printf("index=%d\n", index);
+}
+
+void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint16_t name_index;
+    fread(&name_index, sizeof(uint16_t), 1, fp);
+    name_index = isBigEndian() ? name_index : BigLittleSwap16(name_index);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.class_info.name_index = name_index;
 }
 
 /**
