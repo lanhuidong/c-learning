@@ -15,6 +15,9 @@ void print_constants(struct ClassFile *cfp){
 	        printf("UTF-8      \t\t");
 		print_utf8(cfp->constant_pool[i].info.utf8_info.length, cfp->constant_pool[i].info.utf8_info.bytes);
 	        break;
+	    case 3:
+	        printf("Integer    \t\t%d\n", cfp->constant_pool[i].info.integer_info.bytes);
+	        break;
             case 7:
 	        printf("Class      \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
                 break;

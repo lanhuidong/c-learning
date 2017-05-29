@@ -11,6 +11,7 @@
                            (((uint32_t)(A) & 0x000000ff) << 24))
 
 int isBigEndian();
+void parse_integer_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
@@ -50,6 +51,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
                 parse_utf8_info(i, tag, fp, cfp);
 	        break;
 	    case 3:
+                parse_integer_info(i, tag, fp, cfp);
 	        break;
 	    case 4:
 	        break;
@@ -83,6 +85,14 @@ void parse(FILE *fp,struct ClassFile *cfp)
             default:printf("unkonw tag %u\n", tag);
         }
     }
+}
+
+void parse_integer_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint32_t bytes;
+    fread(&bytes, sizeof(uint32_t), 1, fp);
+    bytes = isBigEndian() ? bytes : BigLittleSwap32(bytes);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.integer_info.bytes = bytes;
 }
 
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
