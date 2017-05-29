@@ -10,18 +10,21 @@ void print_constants(struct ClassFile *cfp){
 	printf("#%-5d = ", i + 1);
 	switch(tag){
             case 7:
-	        printf("Class\t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
+	        printf("Class     \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
                 break;
+	    case 8:
+	        printf("String    \t\t#%u\n", cfp->constant_pool[i].info.string_info.string_index);
+	        break;
 	    case 9:
-                printf("Fieldref\t\t#%u.#%u\n", cfp->constant_pool[i].info.fieldref_info.class_index,cfp->constant_pool[i].info.fieldref_info.name_and_type_index);
+                printf("Fieldref  \t\t#%u.#%u\n", cfp->constant_pool[i].info.fieldref_info.class_index,cfp->constant_pool[i].info.fieldref_info.name_and_type_index);
 	        break;
 	    case 10:
-                printf("Methodref\t\t#%u.#%u\n", cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
+                printf("Methodref \t\t#%u.#%u\n", cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
 	        break;
 	    default:
 	    printf("unkonw tag:%u\n", tag);
 	}
-        if(i==2) {
+        if(i==5) {
             break;
 	}
     }

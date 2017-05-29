@@ -14,6 +14,7 @@ int isBigEndian();
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_string_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 
 void parse(FILE *fp,struct ClassFile *cfp)
 {
@@ -54,9 +55,10 @@ void parse(FILE *fp,struct ClassFile *cfp)
 	    case 6:
 	        break;
 	    case 7:
-                parse_fieldref_info(i, tag, fp, cfp);
+                parse_class_info(i, tag, fp, cfp);
 	        break;
 	    case 8:
+                parse_string_info(i, tag, fp, cfp);
 	        break;
 	    case 9:
                 parse_fieldref_info(i, tag, fp, cfp);
@@ -76,7 +78,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
 	        break;
             default:printf("unkonw tag %u\n", tag);
         }
-        if(i==2){
+        if(i==5){
             break;
         }
     }
@@ -110,6 +112,14 @@ void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *c
     name_index = isBigEndian() ? name_index : BigLittleSwap16(name_index);
     cfp->constant_pool[index].tag = tag;
     cfp->constant_pool[index].info.class_info.name_index = name_index;
+}
+
+void parse_string_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint16_t string_index;
+    fread(&string_index, sizeof(uint16_t), 1, fp);
+    string_index = isBigEndian() ? string_index : BigLittleSwap16(string_index);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.string_info.string_index = string_index;
 }
 
 /**
