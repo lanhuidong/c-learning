@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <math.h>
 #include "bytecode.h"
 
 void print_utf8(uint16_t length, uint8_t *bytes);
+double toFloat(uint32_t bytes);
 
 void print_constants(struct ClassFile *cfp){
     uint16_t constant_pool_count = cfp->constant_pool_count;
@@ -17,6 +19,9 @@ void print_constants(struct ClassFile *cfp){
 	        break;
 	    case 3:
 	        printf("Integer    \t\t%d\n", cfp->constant_pool[i].info.integer_info.bytes);
+	        break;
+	    case 4:
+	        printf("Float      \t\t%.5gf\n", toFloat(cfp->constant_pool[i].info.float_info.bytes));
 	        break;
             case 7:
 	        printf("Class      \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
@@ -47,3 +52,9 @@ void print_utf8(uint16_t length, uint8_t *bytes){
     putchar('\n');
 }
 
+double toFloat(uint32_t bits){
+    int s = ((bits >> 31) == 0) ? 1 : -1; 
+    int e = ((bits >> 23) & 0xff);
+    int m = (e == 0) ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
+    return s * m * pow( 2, e - 150 );
+}
