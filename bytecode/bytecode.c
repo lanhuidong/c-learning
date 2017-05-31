@@ -13,6 +13,7 @@
 int isBigEndian();
 void parse_integer_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_float_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_long_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
@@ -45,7 +46,7 @@ void parse(FILE *fp,struct ClassFile *cfp)
     cfp->constant_pool =(struct Cp_info *)malloc(constant_pool_count * sizeof(struct Cp_info));
 
     uint8_t tag;
-    for(uint16_t i = 0; i < constant_pool_count - 1; i++) {
+    for(uint16_t i = 1; i < constant_pool_count; i++) {
         fread(&tag, sizeof(uint8_t), 1, fp);
 	switch(tag){
 	    case 1:
@@ -58,6 +59,8 @@ void parse(FILE *fp,struct ClassFile *cfp)
                 parse_float_info(i, tag, fp, cfp);
 	        break;
 	    case 5:
+                parse_long_info(i, tag, fp, cfp);
+		i++;
 	        break;
 	    case 6:
 	        break;
@@ -103,6 +106,17 @@ void parse_float_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *c
     bytes = isBigEndian() ? bytes : BigLittleSwap32(bytes);
     cfp->constant_pool[index].tag = tag;
     cfp->constant_pool[index].info.float_info.bytes = bytes;
+}
+
+void parse_long_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint32_t high_bytes, low_bytes;
+    fread(&high_bytes, sizeof(uint32_t), 1, fp);
+    high_bytes = isBigEndian() ? high_bytes : BigLittleSwap32(high_bytes);
+    fread(&low_bytes, sizeof(uint32_t), 1, fp);
+    low_bytes = isBigEndian() ? low_bytes : BigLittleSwap32(low_bytes);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.long_info.high_bytes = high_bytes;
+    cfp->constant_pool[index].info.long_info.low_bytes = low_bytes;
 }
 
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){

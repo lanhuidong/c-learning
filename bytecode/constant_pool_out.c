@@ -5,13 +5,14 @@
 
 void print_utf8(uint16_t length, uint8_t *bytes);
 void toFloat(uint32_t bytes);
+void toLong(uint32_t high_bytes, uint32_t low_bytes);
 
 void print_constants(struct ClassFile *cfp){
     uint16_t constant_pool_count = cfp->constant_pool_count;
     printf("总共有%u项常量\n", constant_pool_count);
-    for(uint16_t i = 0; i < constant_pool_count - 1; i++){
+    for(uint16_t i = 1; i < constant_pool_count; i++){
         uint8_t tag = cfp->constant_pool[i].tag;
-	printf("#%-5d = ", i + 1);
+	printf("#%-5d = ", i);
 	switch(tag){
             case 1:
 	        printf("UTF-8      \t\t");
@@ -23,6 +24,11 @@ void print_constants(struct ClassFile *cfp){
 	    case 4:
 	        printf("Float      \t\t");
 	        toFloat(cfp->constant_pool[i].info.float_info.bytes);
+	        break;
+	    case 5:
+	        printf("Long       \t\t");
+                toLong(cfp->constant_pool[i].info.long_info.high_bytes, cfp->constant_pool[i].info.long_info.low_bytes);
+	        i++;
 	        break;
             case 7:
 	        printf("Class      \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
@@ -57,7 +63,7 @@ void toFloat(uint32_t bits){
     if(bits == 0x7f800000) {
         printf("POSITIVE_INFINITY\n");
     } else if(bits == 0xff800000) {
-        printf("NEGATIVE_INFINITY");
+        printf("NEGATIVE_INFINITY\n");
     } else if(bits >= 0x7f800001 && bits <= 0x7fffffff || bits >= 0xff800001 && bits <= 0xffffffff) {
         printf("NaN\n");
     } else {
@@ -67,4 +73,9 @@ void toFloat(uint32_t bits){
         double result = s * m * pow( 2, e - 150 );
         printf("%.5gf\n", result);
     }
+}
+
+void toLong(uint32_t high_bytes, uint32_t low_bytes){
+    uint64_t result = ((uint64_t)high_bytes << 32) + low_bytes; 
+    printf("%ld\n", result);
 }
