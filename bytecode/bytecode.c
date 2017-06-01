@@ -14,6 +14,7 @@ int isBigEndian();
 void parse_integer_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_float_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_long_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
+void parse_double_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_fieldref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_class_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
@@ -63,6 +64,8 @@ void parse(FILE *fp,struct ClassFile *cfp)
 		i++;
 	        break;
 	    case 6:
+                parse_double_info(i, tag, fp, cfp);
+		i++;
 	        break;
 	    case 7:
                 parse_class_info(i, tag, fp, cfp);
@@ -117,6 +120,17 @@ void parse_long_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cf
     cfp->constant_pool[index].tag = tag;
     cfp->constant_pool[index].info.long_info.high_bytes = high_bytes;
     cfp->constant_pool[index].info.long_info.low_bytes = low_bytes;
+}
+
+void parse_double_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){
+    uint32_t high_bytes, low_bytes;
+    fread(&high_bytes, sizeof(uint32_t), 1, fp);
+    high_bytes = isBigEndian() ? high_bytes : BigLittleSwap32(high_bytes);
+    fread(&low_bytes, sizeof(uint32_t), 1, fp);
+    low_bytes = isBigEndian() ? low_bytes : BigLittleSwap32(low_bytes);
+    cfp->constant_pool[index].tag = tag;
+    cfp->constant_pool[index].info.double_info.high_bytes = high_bytes;
+    cfp->constant_pool[index].info.double_info.low_bytes = low_bytes;
 }
 
 void parse_methodref_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp){

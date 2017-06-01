@@ -6,6 +6,7 @@
 void print_utf8(uint16_t length, uint8_t *bytes);
 void toFloat(uint32_t bytes);
 void toLong(uint32_t high_bytes, uint32_t low_bytes);
+void toDouble(uint32_t high_bytes, uint32_t low_bytes);
 
 void print_constants(struct ClassFile *cfp){
     uint16_t constant_pool_count = cfp->constant_pool_count;
@@ -28,6 +29,11 @@ void print_constants(struct ClassFile *cfp){
 	    case 5:
 	        printf("Long       \t\t");
                 toLong(cfp->constant_pool[i].info.long_info.high_bytes, cfp->constant_pool[i].info.long_info.low_bytes);
+	        i++;
+	        break;
+	    case 6:
+	        printf("Double     \t\t");
+                toDouble(cfp->constant_pool[i].info.double_info.high_bytes, cfp->constant_pool[i].info.double_info.low_bytes);
 	        i++;
 	        break;
             case 7:
@@ -78,4 +84,21 @@ void toFloat(uint32_t bits){
 void toLong(uint32_t high_bytes, uint32_t low_bytes){
     uint64_t result = ((uint64_t)high_bytes << 32) + low_bytes; 
     printf("%ld\n", result);
+}
+
+void toDouble(uint32_t high_bytes, uint32_t low_bytes){
+    uint64_t bits = ((uint64_t)high_bytes << 32) + low_bytes; 
+    if(bits == 0x7ff0000000000000) {
+        printf("POSITIVE_INFINITY\n");
+    } else if(bits == 0xfff0000000000000) {
+        printf("NEGATIVE_INFINITY\n");
+    } else if(bits >= 0x7ff0000000000001 && bits <= 0x7fffffffffffffff || bits >= 0xfff0000000000001 && bits <= 0xffffffffffffffff) {
+        printf("NaN\n");
+    } else {
+        int s = ((bits >> 63) == 0) ? 1 : -1;
+        int e = (int)((bits >> 52) & 0x7ffL);
+	long m = (e == 0) ? (bits & 0xfffffffffffffL) << 1 : (bits & 0xfffffffffffffL) | 0x10000000000000L;
+        double result = s * m * pow( 2, e - 1075 );
+        printf("%.17gd\n", result);
+    }
 }
