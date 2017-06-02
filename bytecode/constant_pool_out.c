@@ -16,40 +16,43 @@ void print_constants(struct ClassFile *cfp){
 	printf("#%-5d = ", i);
 	switch(tag){
             case 1:
-	        printf("UTF-8      \t\t");
+	        printf("UTF-8             \t\t");
 		print_utf8(cfp->constant_pool[i].info.utf8_info.length, cfp->constant_pool[i].info.utf8_info.bytes);
 	        break;
 	    case 3:
-	        printf("Integer    \t\t%d\n", cfp->constant_pool[i].info.integer_info.bytes);
+	        printf("Integer           \t\t%d\n", cfp->constant_pool[i].info.integer_info.bytes);
 	        break;
 	    case 4:
-	        printf("Float      \t\t");
+	        printf("Float             \t\t");
 	        toFloat(cfp->constant_pool[i].info.float_info.bytes);
 	        break;
 	    case 5:
-	        printf("Long       \t\t");
+	        printf("Long              \t\t");
                 toLong(cfp->constant_pool[i].info.long_info.high_bytes, cfp->constant_pool[i].info.long_info.low_bytes);
 	        i++;
 	        break;
 	    case 6:
-	        printf("Double     \t\t");
+	        printf("Double            \t\t");
                 toDouble(cfp->constant_pool[i].info.double_info.high_bytes, cfp->constant_pool[i].info.double_info.low_bytes);
 	        i++;
 	        break;
             case 7:
-	        printf("Class      \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
+	        printf("Class             \t\t#%u\n", cfp->constant_pool[i].info.class_info.name_index);
                 break;
 	    case 8:
-	        printf("String     \t\t#%u\n", cfp->constant_pool[i].info.string_info.string_index);
+	        printf("String            \t\t#%u\n", cfp->constant_pool[i].info.string_info.string_index);
 	        break;
 	    case 9:
-                printf("Fieldref   \t\t#%u.#%u\n", cfp->constant_pool[i].info.fieldref_info.class_index,cfp->constant_pool[i].info.fieldref_info.name_and_type_index);
+                printf("Fieldref          \t\t#%u.#%u\n", cfp->constant_pool[i].info.fieldref_info.class_index,cfp->constant_pool[i].info.fieldref_info.name_and_type_index);
 	        break;
 	    case 10:
-                printf("Methodref  \t\t#%u.#%u\n", cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
+                printf("Methodref         \t\t#%u.#%u\n", cfp->constant_pool[i].info.methodref_info.class_index,cfp->constant_pool[i].info.methodref_info.name_and_type_index);
+	        break;
+	    case 11:
+                printf("InterfaceMethodref\t\t#%u.#%u\n", cfp->constant_pool[i].info.interfaceMethodref_info.class_index,cfp->constant_pool[i].info.interfaceMethodref_info.name_and_type_index);
 	        break;
 	    case 12:
-                printf("NameAndType\t\t#%u.#%u\n", cfp->constant_pool[i].info.nameAndType_info.name_index,cfp->constant_pool[i].info.nameAndType_info.descriptor_index);
+                printf("NameAndType       \t\t#%u.#%u\n", cfp->constant_pool[i].info.nameAndType_info.name_index,cfp->constant_pool[i].info.nameAndType_info.descriptor_index);
 	        break;
 	    default:
 	    printf("unkonw tag:%u\n", tag);
