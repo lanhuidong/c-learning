@@ -1,16 +1,9 @@
 #include<stdio.h>
 #include<stdint.h>
 #include<stdlib.h>
+#include "util.h"
 #include "bytecode.h"
 
-#define BigLittleSwap16(A) ((((uint16_t)(A) & 0xff00) >> 8) | \
-                           (((uint16_t)(A) & 0x00ff) << 8))
-#define BigLittleSwap32(A) ((((uint32_t)(A) & 0xff000000) >> 24) | \
-                           (((uint32_t)(A) & 0x00ff0000) >> 8) | \
-                           (((uint32_t)(A) & 0x0000ff00) << 8) | \
-                           (((uint32_t)(A) & 0x000000ff) << 24))
-
-int isBigEndian();
 void parse_utf8_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_integer_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
 void parse_float_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassFile *cfp);
@@ -205,11 +198,3 @@ void parse_nameandtype_info(uint16_t index, uint8_t tag, FILE *fp, struct ClassF
     cfp->constant_pool[index].info.nameAndType_info.descriptor_index = descriptor_index;
 }
 
-/**
- * 返回0表示小端，返回非0值表示大端
- */
-int isBigEndian(){
-    int i = 1;
-    char c = *(char *)&i;
-    return (int)c != i;
-}

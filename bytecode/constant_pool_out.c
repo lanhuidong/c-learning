@@ -62,8 +62,7 @@ void print_constants(struct ClassFile *cfp){
 
 void print_utf8(uint16_t length, uint8_t *bytes){
     for(uint16_t i = 0; i < length; i++){
-        putchar(*bytes);
-	*bytes++;
+        putchar(bytes[i]);
     }
     putchar('\n');
 }
@@ -73,7 +72,7 @@ void toFloat(uint32_t bits){
         printf("POSITIVE_INFINITY\n");
     } else if(bits == 0xff800000) {
         printf("NEGATIVE_INFINITY\n");
-    } else if(bits >= 0x7f800001 && bits <= 0x7fffffff || bits >= 0xff800001 && bits <= 0xffffffff) {
+    } else if((bits >= 0x7f800001 && bits <= 0x7fffffff) || (bits >= 0xff800001 && bits <= 0xffffffff)) {
         printf("NaN\n");
     } else {
         int s = ((bits >> 31) == 0) ? 1 : -1; 
@@ -95,7 +94,7 @@ void toDouble(uint32_t high_bytes, uint32_t low_bytes){
         printf("POSITIVE_INFINITY\n");
     } else if(bits == 0xfff0000000000000) {
         printf("NEGATIVE_INFINITY\n");
-    } else if(bits >= 0x7ff0000000000001 && bits <= 0x7fffffffffffffff || bits >= 0xfff0000000000001 && bits <= 0xffffffffffffffff) {
+    } else if((bits >= 0x7ff0000000000001 && bits <= 0x7fffffffffffffff) || (bits >= 0xfff0000000000001 && bits <= 0xffffffffffffffff)) {
         printf("NaN\n");
     } else {
         int s = ((bits >> 63) == 0) ? 1 : -1;
