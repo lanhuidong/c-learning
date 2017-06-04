@@ -2,6 +2,8 @@
 
 #define _BYTECODE_H
 
+#include<stdint.h>
+
 struct Class_info {
     uint16_t name_index;
 };
@@ -97,6 +99,8 @@ struct ClassFile {
     struct Cp_info *constant_pool;
 };
 
-void parse(FILE *fp, struct ClassFile *cfp);
+void parse(FILE *fp);
+void parse_constant_pool(FILE *fp, struct ClassFile *cfp);
+void print_constants(struct ClassFile *cfp);
 
 #endif
