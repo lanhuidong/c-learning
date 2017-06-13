@@ -97,6 +97,7 @@ struct ClassFile {
     uint16_t major_version;
     uint16_t constant_pool_count;
     struct Cp_info *constant_pool;
+    uint16_t access_flags;
 };
 
 void parse(FILE *fp);
