@@ -30,11 +30,22 @@ void parse(FILE *fp)
     access_flags = isBigEndian() ? access_flags : BigLittleSwap16(access_flags);
     cfp->access_flags = access_flags;
 
+    uint16_t this_class;
+    fread(&this_class, sizeof(uint16_t), 1, fp);
+    this_class = isBigEndian() ? this_class : BigLittleSwap16(this_class);
+    cfp->this_class = this_class;
+
+    uint16_t super_class;
+    fread(&super_class, sizeof(uint16_t), 1, fp);
+    super_class = isBigEndian() ? super_class : BigLittleSwap16(super_class);
+    cfp->super_class = super_class;
+
     printf("魔数:%X\n", cfp->magic);
     printf("字节码文件版本号: %u.%u, JDK1.%u\n", cfp->major_version, cfp->minor_version, cfp->major_version-44);
 
     print_constants(cfp);
     print_access_flags(access_flags);
+    printf("this=%u, super=%u\n", this_class, super_class);
     
     free(cfp);
 }

@@ -98,6 +98,8 @@ struct ClassFile {
     uint16_t constant_pool_count;
     struct Cp_info *constant_pool;
     uint16_t access_flags;
+    uint16_t this_class;
+    uint16_t super_class;
 };
 
 void parse(FILE *fp);
