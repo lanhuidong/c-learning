@@ -40,12 +40,28 @@ void parse(FILE *fp)
     super_class = isBigEndian() ? super_class : BigLittleSwap16(super_class);
     cfp->super_class = super_class;
 
+    uint16_t interface_count;
+    fread(&interface_count, sizeof(uint16_t), 1, fp);
+    interface_count = isBigEndian() ? interface_count : BigLittleSwap16(interface_count);
+    cfp->interface_count = interface_count;
+    
+    uint16_t *interfaces = (uint16_t *)malloc(sizeof(uint16_t) * interface_count);
+    cfp->interfaces = interfaces;
+    fread(interfaces, sizeof(uint16_t), interface_count, fp);
+    for(int i = 0; i < interface_count; i++){
+        interfaces[i] = isBigEndian() ? interfaces[i] : BigLittleSwap16(interfaces[i]);
+    }
+
     printf("魔数:%X\n", cfp->magic);
     printf("字节码文件版本号: %u.%u, JDK1.%u\n", cfp->major_version, cfp->minor_version, cfp->major_version-44);
 
     print_constants(cfp);
     print_access_flags(access_flags);
     printf("this=%u, super=%u\n", this_class, super_class);
+    printf("interface num is %u\n", interface_count);
+    for(int i = 0; i < interface_count; i++){
+        printf("interface %d is #%u\n", i, interfaces[i]); 
+    }
     
     free(cfp);
 }
