@@ -4,7 +4,7 @@ main: main.o util.o bytecode.o constant_pool_parse.o constant_pool_out.o
 main.o: main.c
 	gcc --std=c99 -Wall  -c main.c
 
-util.o: util.c
+util.o: util.h util.c
 	gcc --std=c99 -Wall -c util.c
 
 bytecode.o: bytecode.h bytecode.c

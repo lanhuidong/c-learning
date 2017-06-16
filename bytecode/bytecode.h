@@ -1,8 +1,8 @@
-#ifndef _BYTECODE_H
+#ifndef BYTECODE_H
 
-#define _BYTECODE_H
+#define BYTECODE_H
 
-#include<stdint.h>
+#include <stdint.h>
 
 struct Class_info {
     uint16_t name_index;
