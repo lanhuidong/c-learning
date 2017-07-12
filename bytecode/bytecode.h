@@ -91,6 +91,10 @@ struct Cp_info {
     union Info info;
 };
 
+struct Field_info{
+
+};
+
 struct ClassFile {
     uint32_t magic;
     uint16_t minor_version;
@@ -102,10 +106,14 @@ struct ClassFile {
     uint16_t super_class;
     uint16_t interface_count;
     uint16_t *interfaces;
+    uint16_t fields_count;
+    struct Field_info *fields; 
 };
 
 void parse(FILE *fp);
 void parse_constant_pool(FILE *fp, struct ClassFile *cfp);
 void print_constants(struct ClassFile *cfp);
+void parse_field_info(FILE *fp, struct ClassFile *cfp);
+void print_field_info(struct ClassFile *cfp);
 
 #endif

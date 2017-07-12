@@ -63,6 +63,9 @@ void parse(FILE *fp)
         printf("interface %d is #%u\n", i, interfaces[i]); 
     }
     
+    parse_field_info(fp, cfp);
+    print_field_info(cfp);
+    
     free(cfp);
 }
 
